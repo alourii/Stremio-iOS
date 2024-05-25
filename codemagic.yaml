@@ -1,8 +1,8 @@
 environment:
   vars:
     BUNDLE_ID: ".com.limvo.stremio"
-    XCODE_WORKSPACE: "Stremio.xcworkspace" # Replace with your Xcode workspace name
-    XCODE_SCHEME: "Stremio" # Replace with your Xcode scheme name
+    XCODE_WORKSPACE: "stremioios.xcworkspace"
+    XCODE_SCHEME: "stremioios"
     APP_VERSION: "0.1"
 
 scripts:
