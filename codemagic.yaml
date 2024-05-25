@@ -6,8 +6,8 @@ xcode_version: 13.4.1
 ios_version: 15.4
 
 # تعيين معلومات التطبيق
-app_name: "اسم التطبيق"  # استبدل هذا بالقيمة الصحيحة
-app_scheme: "اسم المخطط"  # استبدل هذا بالقيمة الصحيحة
+app_name: stremio
+app_scheme: .com.limvo.stremio
 
 # تعيين بيئة البناء
 build_environment:
