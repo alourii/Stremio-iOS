@@ -1,40 +1,18 @@
 workflows:
-  ios-workflow:
-    name: iOS Workflow
-    environment:
-      xcode: latest
-      cocoapods: default
-      vars:
-        # Add any environment variables you need here
-    triggering:
-      events:
-        - push
-        - pull_request
+  ios:
+    name: iOS Build
+    instant_builds: true
+    emails:
+      - yousefalouri2002@gmail.com
     scripts:
-      - name: Set up keychain
+      - name: Install dependencies
         script: |
-          security create-keychain -p "" build.keychain
-          security list-keychains -s build.keychain
-          security default-keychain -s build.keychain
-          security unlock-keychain -p "" build.keychain
-          security set-keychain-settings -t 3600 -l ~/Library/Keychains/build.keychain
-          security import $KEY_PATH -k ~/Library/Keychains/build.keychain -P $KEY_PASSWORD -T /usr/bin/codesign
-          security set-key-partition-list -S apple-tool:,apple: -s -k "" build.keychain
-      - name: Install CocoaPods
-        script: pod install
-      - name: Build the app
-        script: xcodebuild -workspace Stremio.xcworkspace -scheme Stremio -configuration Release -sdk iphoneos build CODE_SIGN_IDENTITY="iPhone Distribution" PROVISIONING_PROFILE_SPECIFIER="your_provisioning_profile"
-      - name: Create IPA
+          gem install cocoapods
+          pod repo update
+          pod install
+      - name: Build IPA
         script: |
-          mkdir -p build/ipa
-          xcodebuild -workspace Stremio.xcworkspace -scheme Stremio -configuration Release -sdk iphoneos -archivePath build/Stremio.xcarchive archive
-          xcodebuild -exportArchive -archivePath build/Stremio.xcarchive -exportPath build/ipa -exportOptionsPlist ExportOptions.plist
-      - name: Save build artifacts
-        script: |
-          mv build/ipa/Stremio.ipa $CM_BUILD_DIR/Stremio.ipa
+          xcodebuild clean -workspace Stremio.xcworkspace -scheme Stremio -configuration Release
+          xcodebuild -exportArchive -archivePath Stremio.xcarchive -exportPath Stremio -exportFormat ipa -configuration Release
     artifacts:
       - Stremio.ipa
-    publishing:
-      email:
-        recipients:
-          - your-email@example.com
