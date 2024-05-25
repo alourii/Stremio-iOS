@@ -1,3 +1,4 @@
+
 workflows:
   stremio:
     name: stremioios
@@ -23,7 +24,7 @@ workflows:
       - name: Codemagic CLI Tools build
         script: pip3 install codemagic-cli-tools 
       - name: Initialize Pods 
-        script: pod init --project=$XCODE_WORKSPACE && pod install --project=$XCODE_WORKSPACE
+        script: pod init $XCODE_WORKSPACE && pod install
       - name: Set up provisioning profiles settings on Xcode project
         script: xcode-project use-profiles
       - name: Increment build number
