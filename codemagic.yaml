@@ -1,47 +1,47 @@
 workflows:
-    stremio:
-      name: stremioios
-      instance_type: stremio
-      environment:
-        vars:
-          XCODE_WORKSPACE: "stremioios.xcworkspace"
-          XCODE_SCHEME: "stremioios"
-          BUNDLE_ID: ".com.limvo.stremio"
-          APP_STORE_APPLE_ID: yousefalouri2002@gmail.com
-        xcode: 14.2
-        cocoapods: default
-        ios_signing:
-          distribution_type: stremioios
-          bundle_identifier: .com.limvo.stremio
-      triggering:
-        events:
-          - push
-          - tag
-          - pull_request
-        branch_patterns:
-          - pattern: develop
-            include: true
-            source: true
-      scripts:
-        - name: Codemagic CLI Tools build
-          script: pip3 install codemagic-cli-tools 
-        - name: Initialize Pods 
-          script: pod init && pod install
-        - name: Set up provisioning profiles settings on Xcode project
-          script: xcode-project use-profiles
-        - name: Increment build number
-          script: agvtool new-version -all $(($(app-store-connect get-latest-build-number "$APP_STORE_APPLE_ID") + 1))
-        - name: Create archive
-          script: xcode-project build-ipa --workspace "$XCODE_WORKSPACE" --scheme "$XCODE_SCHEME" --archive-xcargs "CODE_SIGN_STYLE=Manual DEVELOPMENT_TEAM=" --archive-flags "-destination 'generic/platform=iOS' CODE_SIGNING_REQUIRED=YES CODE_SIGNING_ALLOWED=NO"
-        - name: Publish on App Store
-          script: app-store-connect publish --beta-build-localizations=@file:whats_new.json
-      artifacts:
-        - build/ios/ipa/*.ipa
-        - $HOME/Library/Developer/Xcode/DerivedData/**/Build/**/*.dSYM
-        - $HOME/Library/Developer/Xcode/DerivedData/**/Build/**/*.app
-      publishing:
-           auth: integration
-           submit_to_testflight: false                         
-         email:
-           recipients:
-            yousef34108@gmail.com
+  stremio:
+    name: stremioios
+    instance_type: stremio
+    environment:
+      vars:
+        XCODE_WORKSPACE: "stremioios.xcworkspace"
+        XCODE_SCHEME: "stremioios"
+        BUNDLE_ID: ".com.limvo.stremio"
+        APP_STORE_APPLE_ID: yousefalouri2002@gmail.com
+      xcode: 14.2
+      cocoapods: default
+      ios_signing:
+        distribution_type: stremioios
+        bundle_identifier: .com.limvo.stremio
+    triggering:
+      events:
+        - push
+        - tag
+        - pull_request
+      branch_patterns:
+        - pattern: develop
+          include: true
+          source: true
+    scripts:
+      - name: Codemagic CLI Tools build
+        script: pip3 install codemagic-cli-tools 
+      - name: Initialize Pods 
+        script: pod init && pod install
+      - name: Set up provisioning profiles settings on Xcode project
+        script: xcode-project use-profiles
+      - name: Increment build number
+        script: agvtool new-version -all $(($(app-store-connect get-latest-build-number "$APP_STORE_APPLE_ID") + 1))
+      - name: Create archive
+        script: xcode-project build-ipa --workspace "$XCODE_WORKSPACE" --scheme "$XCODE_SCHEME" --archive-xcargs "CODE_SIGN_STYLE=Manual DEVELOPMENT_TEAM=" --archive-flags "-destination 'generic/platform=iOS' CODE_SIGNING_REQUIRED=YES CODE_SIGNING_ALLOWED=NO"
+      - name: Publish on App Store
+        script: app-store-connect publish --beta-build-localizations=@file:whats_new.json
+    artifacts:
+      - build/ios/ipa/*.ipa
+      - $HOME/Library/Developer/Xcode/DerivedData/**/Build/**/*.dSYM
+      - $HOME/Library/Developer/Xcode/DerivedData/**/Build/**/*.app
+    publishing:
+      auth: integration
+      submit_to_testflight: false
+      email:
+        recipients:
+          - yousef34108@gmail.com
