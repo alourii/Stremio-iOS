@@ -1,21 +1,30 @@
-# CodeMagic configuration for Stremio app
-
-# Xcode project location
-xcode_project: ios/Stremio.xcodeproj
-
-# Scheme to build
-scheme: Stremio
-
-# Provisioning profile UUID
-provisioning_profile_uuid: "YOUR_PROVISIONING_PROFILE_UUID"
-
-# Build configuration
-build_configuration: Release
-
-# Output directory
-output_directory: "$CM_BUILD_DIR/Stremio"
-
-# Explicitly specify the bundle identifier
-build_ios_app:
-  params:
-    bundle_identifier: "com.limvo.stremio"
+workflows:
+  ios-build-and-export:
+    name: iOS Build and Export
+    scripts:
+      - name: Install dependencies
+        script: |
+          pod install
+      - name: Build and export IPA
+        script: |
+          xcodebuild \
+          -workspace Stremio.xcworkspace \
+          -scheme Stremio \
+          -configuration Release \
+          -destination generic/platform=iOS \
+          archive
+          xcodebuild \
+          -exportArchive \
+          -archivePath "Stremio.xcarchive" \
+          -exportOptionsPlist exportOptions.plist \
+          -exportPath "Stremio.ipa"
+    environment:
+      vars:
+        PRODUCT_BUNDLE_IDENTIFIER: "com.limvo.stremio"
+        PRODUCT_NAME: "Stremio"
+        EXECUTABLE_NAME: "Stremio"
+        DEVELOPMENT_LANGUAGE: "en"
+        PRODUCT_BUNDLE_PACKAGE_TYPE: "com.apple.product-type.application"
+    artifacts:
+      paths:
+        - Stremio.ipa
