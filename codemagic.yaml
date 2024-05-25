@@ -1,33 +1,32 @@
+# codemagic.yaml file
 
-# ملف codemagic.yaml
-
-# تعيين إصدارات Xcode و iOS
+# Set Xcode and iOS versions
 xcode_version: 13.4.1
 ios_version: 15.4
 
-# تعيين معلومات التطبيق
+# Set application information
 app_name: stremio
 app_scheme: .com.limvo.stremio
 
-# تعيين بيئة البناء
+# Set build environment
 build_environment:
   - MACOS_X_11.4
 
-# تعريف المتغيرات
+# Define variables
 variables:
-  # مسار مجلد العمل
+  # Path to the working directory
   WORKSPACE_DIR: "${CM_BUILD_DIR}/${XCODE_WORKSPACE}"
-  # مسار مجلد ملفات ipa
+  # Path to the ipa files directory
   IPA_DIR: "build/ios/ipa"
-  # مسار ملفات سجلات Xcode
+  # Path to Xcode logs directory
   LOGS_DIR: "/tmp/xcodebuild_logs"
-  # مسار مجلد بيانات مشتقة من Xcode
+  # Path to the Xcode Derived Data directory
   DERIVED_DATA_DIR: "$HOME/Library/Developer/Xcode/DerivedData/**/Build/**/*.app"
 
-# تعريف خطوات سير العمل
+# Define workflow steps
 workflows:
   build-and-deploy:
-    name: بناء ونشر التطبيق
+    name: Build and Deploy App
     on:
       push:
         branches:
