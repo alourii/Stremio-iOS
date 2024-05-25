@@ -3,10 +3,7 @@ workflows:
     name: iOS Native
     max_build_duration: 120
     instance_type: mac_mini_m1
-    integrations:
-      app_store_connect: codemagic
     environment:
-      ios_signing:
         distribution_type: stremio
         bundle_identifier: io.codemagic.sample.iosnative
       vars:
@@ -14,7 +11,7 @@ workflows:
         XCODE_WORKSPACE: "streamio.xcworkspace"
         XCODE_SCHEME: "streamio"
     scripts:
-      - name: Build ipa for distribution
+      - name: stremio.ipa
         script: |
           xcode-project build-ipa \
             --workspace "$CM_BUILD_DIR/$XCODE_WORKSPACE" \
