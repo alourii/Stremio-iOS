@@ -10,53 +10,5 @@ app_scheme: .com.limvo.stremio
 
 # Set build environment
 build_environment:
-  - MACOS_X_11.4
-
-# Define variables
-variables:
-  # Path to the working directory
-  WORKSPACE_DIR: "${CM_BUILD_DIR}/${XCODE_WORKSPACE}"
-  # Path to the ipa files directory
-  IPA_DIR: "build/ios/ipa"
-  # Path to Xcode logs directory
-  LOGS_DIR: "/tmp/xcodebuild_logs"
-  # Path to the Xcode Derived Data directory
-  DERIVED_DATA_DIR: "$HOME/Library/Developer/Xcode/DerivedData/**/Build/**/*.app"
-
-# Define workflow steps
-workflows:
-  build-and-deploy:
-    name: Build and Deploy App
-    on:
-      push:
-        branches:
-          - main
-    steps:
-      - checkout
-      - xcode-select:
-          version: "${XCODE_VERSION}"
-      - install-xcode-build-tools
-      - pod-install
-      - cache-pod:
-          paths:
-            - "Pods"
-      - xcode-build:
-          workspace: "${WORKSPACE_DIR}"
-          scheme: "${APP_SCHEME}"
-          configuration: Release
-          export_options:
-            - EXPORT_PATH="$IPA_DIR"
-            - EXPORT_TYPE="ipa"
-      - archive-ios:
-          workspace: "${WORKSPACE_DIR}"
-          scheme: "${APP_SCHEME}"
-          configuration: Release
-          archive_path: "$IPA_DIR/${APP_NAME}.xcarchive"
-      - upload-artifacts:
-          paths:
-            - "${IPA_DIR}/*.ipa"
-            - "${LOGS_DIR}/*.log"
-            - "${DERIVED_DATA_DIR}"
-      - save-artifacts:
-          path: "${IPA_DIR}/*.ipa"
-          base_path: "ipa"
+  - MACOS_X_1
+  
