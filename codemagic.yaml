@@ -1,0 +1,26 @@
+workflows:
+  ios-workflow:
+    name: iOS Workflow
+    environment:
+      vars:
+        XCODE_WORKSPACE: "Stremio.xcworkspace"
+        XCODE_SCHEME: "Stremio"
+      ios_signing:
+        distribution_type: app_store
+        bundle_identifier: "io.stremio.Stremio"
+    scripts:
+      - name: Install dependencies
+        script: |
+          gem install cocoapods
+          pod repo update
+          pod install
+      - name: Build IPA
+        script: |
+          xcode-project build-ipa \
+            --workspace "$XCODE_WORKSPACE" \
+            --scheme "$XCODE_SCHEME"
+    artifacts:
+      - build/ios/ipa/*.ipa
+      - /tmp/xcodebuild_logs/*.log
+      - $HOME/Library/Developer/Xcode/DerivedData/**/Build/**/*.app
+      - $HOME/Library/Developer/Xcode/DerivedData/**/Build/**/*.dSYM
