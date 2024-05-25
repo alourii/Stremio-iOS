@@ -9,8 +9,6 @@ workflows:
         XCODE_WORKSPACE: "streamio.xcworkspace"
         XCODE_SCHEME: "streamio"
     scripts:
-      - name: Build and export IPA
-        script: |
           # Set up code signing (if required)
           # For example:
           # keychain initialize
