@@ -1,18 +1,18 @@
 workflows:
-    ios-swiftly:
-      name: ios_swiftly
-      instance_type: mac_mini_m1
+    stremio:
+      name: stremioios
+      instance_type: stremio
       environment:
         vars:
-          XCODE_WORKSPACE: "swiftly.xcworkspace"
-          XCODE_SCHEME: "swiftly"
-          BUNDLE_ID: "io.codemagic.cmswiftly"
-          APP_STORE_APPLE_ID: 12345678 # <-- Put your Apple App ID here. This can be found in App Store Connect > Your App > General > App Information > Apple ID. 
+          XCODE_WORKSPACE: "stremioios.xcworkspace"
+          XCODE_SCHEME: "stremioios"
+          BUNDLE_ID: ".com.limvo.stremio"
+          APP_STORE_APPLE_ID: yousefalouri2002@gmail.com
         xcode: 14.2
         cocoapods: default
         ios_signing:
-          distribution_type: app_store
-          bundle_identifier: io.codemagic.cmswiftly
+          distribution_type: stremioios
+          bundle_identifier: .com.limvo.stremio
       triggering:
         events:
           - push
@@ -24,7 +24,7 @@ workflows:
             source: true
       scripts:
         - name: Codemagic CLI Tools build
-          script: pip3 install codemagic-cli-tools # The Codemagic CLI tools are already installed on Codemagic servers
+          script: pip3 install codemagic-cli-tools 
         - name: Initialize Pods 
           script: pod init && pod install
         - name: Set up provisioning profiles settings on Xcode project
@@ -40,13 +40,8 @@ workflows:
         - $HOME/Library/Developer/Xcode/DerivedData/**/Build/**/*.dSYM
         - $HOME/Library/Developer/Xcode/DerivedData/**/Build/**/*.app
       publishing:
-         app_store_connect:
-           # Use referenced App Store Connect API key to authenticate binary upload
            auth: integration
-           submit_to_testflight: false                     # Optional boolean, defaults to false. Whether or not to submit the uploaded build to TestFlight beta review. Required for distributing to beta groups. Note: This action is performed during post-processing.
-           # beta_groups:                                  # Specify the names of beta tester groups that will get access to the build once it has passed beta review. 
-           #      - group name 1
-           #      - group name 2                      
+           submit_to_testflight: false                         
          email:
            recipients:
-            - user_1@example.com
+            yousef34108@gmail.com
