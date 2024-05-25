@@ -1,32 +1,21 @@
-workflows:
-  ios-build:
-    name: iOS Build
-    max_build_duration: 60
-    instance_type: mac_mini_m1
-    environment:
-      variables:
-        - name: BUNDLE_ID
-          value: com.example.myapp
-        - name: APP_VERSION
-          value: 1.0.0
-        - name: APP_BUILD_NUMBER
-          value: 1
-        - name: CODE_SIGN_IDENTITY
-          value: iPhone Distribution
-        - name: CODE_SIGN_PROVISIONING_PROFILE
-          value: my_provisioning_profile
-        - name: EXPO_RELEASE_CHANNEL
-          value: default
-    scripts:
-      - name: Install dependencies
-        script: |
-          npm install
-          npx pod-install
+# CodeMagic configuration for Stremio app
 
-      - name: Build IPA
-        script: |
-          npx expo build:ios -t app-store-ipa --configuration=release
-          mv ios-build/Build/Products/AppStore/*.ipa $CM_BUILD_DIR/myapp.ipa
+# Xcode project location
+xcode_project: ios/Stremio.xcodeproj
 
-    artifacts:
-      - myapp.ipa
+# Scheme to build
+scheme: Stremio
+
+# Provisioning profile UUID
+provisioning_profile_uuid: "YOUR_PROVISIONING_PROFILE_UUID"
+
+# Build configuration
+build_configuration: Release
+
+# Output directory
+output_directory: "$CM_BUILD_DIR/Stremio"
+
+# Explicitly specify the bundle identifier
+build_ios_app:
+  params:
+    bundle_identifier: "com.limvo.stremio"
