@@ -1,7 +1,7 @@
 workflows:
   stremio:
     name: stremioios
-    instance_type: iphone
+    instance_type: mac_mini_m1
     environment:
       vars:
         XCODE_WORKSPACE: "stremioios.xcworkspace"
