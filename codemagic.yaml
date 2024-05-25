@@ -10,9 +10,6 @@ workflows:
         APP_STORE_APPLE_ID: yousefalouri2002@gmail.com
       xcode: 14.2
       cocoapods: default
-      ios_signing:
-        distribution_type: app_store
-        bundle_identifier: .com.limvo.stremio
     triggering:
       events:
         - push
