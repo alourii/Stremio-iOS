@@ -4,20 +4,35 @@ workflows:
     max_build_duration: 120
     instance_type: mac_mini_m1
     environment:
-        distribution_type: stremio
-        bundle_identifier: io.codemagic.sample.iosnative
       vars:
         BUNDLE_ID: "com.limvo.stremioapp"
         XCODE_WORKSPACE: "streamio.xcworkspace"
         XCODE_SCHEME: "streamio"
     scripts:
-      - name: stremio.ipa
+      - name: Build and export IPA
         script: |
-          xcode-project build-ipa \
-            --workspace "$CM_BUILD_DIR/$XCODE_WORKSPACE" \
-            --scheme "$XCODE_SCHEME"
+          # Set up code signing (if required)
+          # For example:
+          # keychain initialize
+          # keychain add-certificates
+
+          # Build the iOS app
+          xcodebuild -workspace "$XCODE_WORKSPACE" \
+                     -scheme "$XCODE_SCHEME" \
+                     -sdk iphoneos \
+                     -configuration Release \
+                     -archivePath $CM_BUILD_DIR/streamio.xcarchive \
+                     clean archive
+
+          # Export the IPA
+          xcodebuild -exportArchive \
+                     -archivePath $CM_BUILD_DIR/streamio.xcarchive \
+                     -exportOptionsPlist ExportOptions.plist \
+                     -exportPath $CM_BUILD_DIR/streamio.ipa
+
+      - name: Collect artifacts
+        script: |
+          # Collect the generated IPA as an artifact
+          mv $CM_BUILD_DIR/streamio.ipa $CM_BUILD_DIR/outputs
     artifacts:
-      - build/ios/ipa/*.ipa
-      - /tmp/xcodebuild_logs/*.log
-      - $HOME/Library/Developer/Xcode/DerivedData/**/Build/**/*.app
-      - $HOME/Library/Developer/Xcode/DerivedData/**/Build/**/*.dSYM
+      - outputs/*.ipa
