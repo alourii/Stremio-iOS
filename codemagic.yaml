@@ -8,11 +8,11 @@ workflows:
     environment:
       ios_signing:
         distribution_type: app_store
-        bundle_identifier: io.codemagic.sample.iosnative
+        bundle_identifier: com.linvo.stremioapp
       vars:
-        BUNDLE_ID: "io.codemagic.sample.iosnative"
-        XCODE_WORKSPACE: "CodemagicSample.xcworkspace"
-        XCODE_SCHEME: "CodemagicSample"
+        BUNDLE_ID: "com.linvo.stremioapp"
+        XCODE_WORKSPACE: "stremio.xcworkspace"
+        XCODE_SCHEME: "stremio"
     scripts:
       - name: Build ipa for distribution
         script: |
