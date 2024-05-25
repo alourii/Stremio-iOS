@@ -1,11 +1,11 @@
 workflows:
-  ios-build-and-export:
-    name: iOS Build and Export
+  ios-build:
+    name: iOS Build
     scripts:
       - name: Install dependencies
         script: |
           pod install
-      - name: Build and export IPA
+      - name: Build app
         script: |
           xcodebuild \
           -workspace Stremio.xcworkspace \
@@ -13,11 +13,6 @@ workflows:
           -configuration Release \
           -destination generic/platform=iOS \
           archive
-          xcodebuild \
-          -exportArchive \
-          -archivePath "Stremio.xcarchive" \
-          -exportOptionsPlist exportOptions.plist \
-          -exportPath "Stremio.ipa"
     environment:
       vars:
         PRODUCT_BUNDLE_IDENTIFIER: "com.limvo.stremio"
@@ -25,6 +20,21 @@ workflows:
         EXECUTABLE_NAME: "Stremio"
         DEVELOPMENT_LANGUAGE: "en"
         PRODUCT_BUNDLE_PACKAGE_TYPE: "com.apple.product-type.application"
+        CFBundleShortVersionString: "1.0.0"
+        CFBundleVersion: "1"
     artifacts:
       paths:
-        - Stremio.ipa
+        - Stremio.xcarchive
+    triggers:
+      - event: push
+        branch:
+          - main
+    environment_variables:
+      - name: PROVISIONING_PROFILE_UUID
+        value: "YOUR_PROVISIONING_PROFILE_UUID"
+      - name: CODE_SIGN_IDENTITY
+        value: "iPhone Distribution: Your Name (YOUR_TEAM_ID)"
+    xcode:
+      - version: 12.4
+    ios:
+      - version: 14.4
