@@ -1,59 +1,26 @@
 workflows:
-  sample-workflow:
-    name: Codemagic Sample Workflow
+  ios-native-workflow:
+    name: iOS Native
     max_build_duration: 120
     instance_type: mac_mini_m1
+    integrations:
+      app_store_connect: codemagic
+    environment:
+      ios_signing:
+        distribution_type: app_store
+        bundle_identifier: io.codemagic.sample.iosnative
+      vars:
+        BUNDLE_ID: "io.codemagic.sample.iosnative"
+        XCODE_WORKSPACE: "CodemagicSample.xcworkspace"
+        XCODE_SCHEME: "CodemagicSample"
     scripts:
-      - name: Build iOS app
+      - name: Build ipa for distribution
         script: |
-          # Set up code signing (if required)
-          # For example:
-          keychain initialize
-          keychain add-certificates
-
-          # Detect Xcode project or workspace file
-          PROJECT_FILE=$(find . -maxdepth 1 -name "*.xcodeproj" -print -quit)
-          WORKSPACE_FILE=$(find . -maxdepth 1 -name "*.xcworkspace" -print -quit)
-
-          if [[ -z "$PROJECT_FILE" && -z "$WORKSPACE_FILE" ]]; then
-            echo "No Xcode project or workspace file found"
-            exit 1
-          fi
-
-          # Detect the scheme
-          if [[ -n "$PROJECT_FILE" ]]; then
-            SCHEME=$(xcodebuild -project "$PROJECT_FILE" -list -json | jq -r '.project.schemes[0]')
-          else
-            SCHEME=$(xcodebuild -workspace "$WORKSPACE_FILE" -list -json | jq -r '.workspace.schemes[0]')
-          fi
-
-          # Build the iOS app
-          if [[ -n "$WORKSPACE_FILE" ]]; then
-            xcodebuild -workspace "$WORKSPACE_FILE" \
-                       -scheme "$SCHEME" \
-                       -sdk iphoneos \
-                       -configuration Release \
-                       -archivePath $CM_BUILD_DIR/ios_app.xcarchive \
-                       clean archive
-          else
-            xcodebuild -project "$PROJECT_FILE" \
-                       -scheme "$SCHEME" \
-                       -sdk iphoneos \
-                       -configuration Release \
-                       -archivePath $CM_BUILD_DIR/ios_app.xcarchive \
-                       clean archive
-          fi
-
-          # Export the IPA
-          xcodebuild -exportArchive \
-                     -archivePath $CM_BUILD_DIR/ios_app.xcarchive \
-                     -exportOptionsPlist ExportOptions.plist \
-                     -exportPath $CM_BUILD_DIR/ios_app.ipa
-
-      - name: Collect artifacts
-        script: |
-          # Collect the generated IPA as an artifact
-          mv $CM_BUILD_DIR/ios_app.ipa $CM_BUILD_DIR/outputs
-
+          xcode-project build-ipa \
+            --workspace "$CM_BUILD_DIR/$XCODE_WORKSPACE" \
+            --scheme "$XCODE_SCHEME"
     artifacts:
-      - outputs/*.ipa
+      - build/ios/ipa/*.ipa
+      - /tmp/xcodebuild_logs/*.log
+      - $HOME/Library/Developer/Xcode/DerivedData/**/Build/**/*.app
+      - $HOME/Library/Developer/Xcode/DerivedData/**/Build/**/*.dSYM
