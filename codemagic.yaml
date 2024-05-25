@@ -1,7 +1,7 @@
 workflows:
   stremio:
     name: stremioios
-    instance_type: stremio
+    instance_type: mac_mini
     environment:
       vars:
         XCODE_WORKSPACE: "stremioios.xcworkspace"
@@ -11,7 +11,7 @@ workflows:
       xcode: 14.2
       cocoapods: default
       ios_signing:
-        distribution_type: stremioios
+        distribution_type: app_store
         bundle_identifier: .com.limvo.stremio
     triggering:
       events:
@@ -40,8 +40,6 @@ workflows:
       - $HOME/Library/Developer/Xcode/DerivedData/**/Build/**/*.dSYM
       - $HOME/Library/Developer/Xcode/DerivedData/**/Build/**/*.app
     publishing:
-      auth: integration
-      submit_to_testflight: false
       email:
         recipients:
           - yousef34108@gmail.com
