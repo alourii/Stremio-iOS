@@ -23,8 +23,10 @@ workflows:
     scripts:
       - name: Codemagic CLI Tools build
         script: pip3 install codemagic-cli-tools 
+      - name: Create Xcode project
+        script: xcodeproj create --workspace $XCODE_WORKSPACE --scheme $XCODE_SCHEME
       - name: Initialize Pods 
-        script: pod init $XCODE_WORKSPACE && pod install
+        script: pod init && pod install
       - name: Set up provisioning profiles settings on Xcode project
         script: xcode-project use-profiles
       - name: Increment build number
